@@ -1,10 +1,12 @@
 package com.alvin.guess;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -22,10 +24,12 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
 
      int guessTime = 0 ;
+     int counter = 0;
      TextView textView;
      Button button;
      int answer = new Random().nextInt(10)+1;
      String TAG = MainActivity.class.getSimpleName();
+    private TextView ed_counter;
 
 
     @Override
@@ -58,13 +62,30 @@ public class MainActivity extends AppCompatActivity {
         guessTime += 1;
         textView=findViewById(R.id.editText);
         button = findViewById(R.id.button);
+        ed_counter = findViewById(R.id.ed_counter);
         Log.d(TAG,"Answer:" + answer);
         EditText editText = findViewById(R.id.editText);
         TextView textView2 = findViewById(R.id.textView2);
+        ed_counter.setText(counter+" ");
+        counter = 0;
+        counter ++ ;
         int guess = Integer.valueOf(editText.getText().toString());
 
+
         if (guess == answer) {
-            Toast.makeText(MainActivity.this, "Bingo", Toast.LENGTH_LONG).show();
+            //Toast.makeText(MainActivity.this, "Bingo", Toast.LENGTH_LONG).show();
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("Result")
+                    .setMessage("Bingo")
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            answer = new Random().nextInt(10)+1;
+                            counter = 0;
+
+                        }
+                    })
+                    .show();
 
         }else if(guess < answer) {
             Toast.makeText(MainActivity.this, "Bigger", Toast.LENGTH_LONG).show();
@@ -74,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
         textView2.setText("猜了"+Integer.toString(guessTime)+"次");
+        ed_counter.setText("猜了"+Integer.toString(guessTime)+"次");
     }
 
 
